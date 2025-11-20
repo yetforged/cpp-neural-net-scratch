@@ -1,0 +1,8 @@
+# Ignore built executables
+*.exe
+*.o
+brain
+perceptron
+
+# Ignore IDE settings
+.vscode/
