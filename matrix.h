@@ -18,6 +18,7 @@ public:
     Matrix transpose();
     Matrix multiplyScalar(double scalar);
     Matrix add(const Matrix &m);
+    Matrix subtract(const Matrix& m);
     Matrix multiply(const Matrix &m);
     Matrix map(double (*func)(double));
 };

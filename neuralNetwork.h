@@ -23,6 +23,9 @@ private:
     // 4. Activation Function
     static double sigmoid(double x);
 
+    // 5. Derivative of Activation Function
+    static double dsigmoid(double y);
+
 public:
     // Cosntructor : Initialize the brain size
     NeuralNetwork(int input_nodes, int hidden_nodes, int output_nodes);
@@ -32,6 +35,12 @@ public:
     // Returns a standard C++ vector as output (list of probabilities)
     std::vector<double> feedForward(std::vector<double> input_array);
 
+    // Training function
+    // Input - data to look at
+    // Target - answer it should have given
+    void train(std::vector<double> input_array, std::vector<double> target_array);
+
 };
+
 
 #endif // NEURALNETWORK_H

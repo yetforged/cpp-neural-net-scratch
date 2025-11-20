@@ -62,6 +62,13 @@ double NeuralNetwork::sigmoid(double x){
     return 1.0 / (1.0 + exp(-x));
 }
 
+// The dsigmoid function - derivative of sigmoid
+double NeuralNetwork::dsigmoid(double y){
+    // y = sigmoid(x)
+    return y * (1 - y);
+}
+
+
 
 // Feedforward function
 /*
@@ -108,4 +115,44 @@ std::vector<double> NeuralNetwork::feedForward(std::vector<double> input_array){
         result.push_back(outputs.at(i,0));
     }
     return result;
+}
+
+void NeuralNetwork::train(std::vector<double> input_array, std::vector<double> target_array) {
+    // ---------------------------------------------------------
+    // PHASE 1: FEED FORWARD (Generate the Guess)
+    // ---------------------------------------------------------
+    
+    // 1. Convert Inputs to Matrix
+    // (Copy code from feedForward or refactor later)
+    
+    // 2. Calculate Hidden Layer Output
+    // (Matrix Multiply -> Add Bias -> Sigmoid)
+    
+    // 3. Calculate Final Output
+    // (Matrix Multiply -> Add Bias -> Sigmoid)
+
+    // ---------------------------------------------------------
+    // PHASE 2: BACKPROPAGATION (Calculate the Blame)
+    // ---------------------------------------------------------
+
+    // 4. Calculate Output Error
+    // ERROR = TARGETS - OUTPUTS
+
+    // 5. Calculate Hidden Error
+    // ERROR_HIDDEN = WEIGHTS_HO_TRANSPOSED * ERROR_OUTPUT
+
+    // ---------------------------------------------------------
+    // PHASE 3: GRADIENT DESCENT (Update the Weights)
+    // ---------------------------------------------------------
+    
+    // 6. Calculate Gradients (Nudges)
+    // Gradient = Error * dsigmoid(Output) * LearningRate
+    
+    // 7. Adjust Weights (Hidden -> Output)
+    // Delta = Gradient * Hidden_Transposed
+    // Weights_HO = Weights_HO + Delta
+    
+    // 8. Adjust Weights (Input -> Hidden)
+    // Delta = Hidden_Gradient * Input_Transposed
+    // Weights_IH = Weights_IH + Delta
 }
