@@ -170,7 +170,8 @@ Matrix Matrix::subtract(const Matrix &m){
 
 
 // Hadamard Product (Element-wise multiplication)
-Matricx Matrix::multiplyHadamard(const Matrix &m){
+Matrix Matrix::multiplyHadamard(const Matrix &m){
+    
     if(rows != m.rows || cols != m.cols){
         std::cerr << "Error : Matrix dimensions Mismatch in Hadamard multiplication. " << std::endl;
         return Matrix(0,0); // Return empty matrix on error

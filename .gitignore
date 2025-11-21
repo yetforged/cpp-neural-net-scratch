@@ -3,6 +3,10 @@
 *.o
 brain
 perceptron
+xor_solver
 
 # Ignore IDE settings
 .vscode/
+
+# ignore scrrenshot files
+doc/
