@@ -61,24 +61,6 @@ Epochs:         50,000
 
 **Performance:** Successfully learns the non-linear XOR function, demonstrating the network's ability to solve problems that single-layer perceptrons cannot.
 
-## Results
-
-### MNIST Digit Recognition Output
-
-![MNIST Digit Recognition Results](Doc/digitrecog.png)
-
-The network successfully recognizes handwritten digits with ~94.8% accuracy. The visualization shows:
-
-- ASCII art representation of the input digit
-- Real-time training progress
-- Final accuracy metrics on 10,000 test images
-
-### XOR Logic Gate Training
-
-![XOR Logic Gate Results](Doc/xor_result.png)
-
-The network successfully learns the XOR function, a classic non-linear problem that demonstrates the power of hidden layers. The output shows perfect classification after 50,000 training epochs.
-
 ## Getting Started
 
 ### Prerequisites
@@ -119,17 +101,6 @@ digitRecog.exe    # Windows
 ./xor             # Linux/Mac
 xor.exe           # Windows
 ```
-
-## Key Concepts Demonstrated
-
-- **Backpropagation:** Error propagation through network layers
-- **Gradient Descent:** Iterative weight optimization
-- **Activation Functions:** Non-linear transformations (Sigmoid)
-- **Matrix Calculus:** Derivatives and chain rule application
-- **One-Hot Encoding:** Label representation for classification
-- **Normalization:** Feature scaling for better convergence
-- **Binary File I/O:** Low-level data parsing
-- **Endianness Conversion:** Cross-platform data compatibility
 
 ## License
 
