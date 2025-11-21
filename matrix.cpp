@@ -152,6 +152,7 @@ Matrix Matrix::map(double (*func)(double)) {
     return result;
 }
 
+// Substraction function 
 Matrix Matrix::subtract(const Matrix &m){
     if(rows != m.rows || cols != m.cols){
         std::cerr << "Error : Matrix dimensions Mismatch in subtraction. " << std::endl;
@@ -167,3 +168,19 @@ Matrix Matrix::subtract(const Matrix &m){
     return result;
 }
 
+
+// Hadamard Product (Element-wise multiplication)
+Matricx Matrix::multiplyHadamard(const Matrix &m){
+    if(rows != m.rows || cols != m.cols){
+        std::cerr << "Error : Matrix dimensions Mismatch in Hadamard multiplication. " << std::endl;
+        return Matrix(0,0); // Return empty matrix on error
+    }
+
+    Matrix result(rows, cols); // Same dimensions
+    for(int i = 0; i < rows; i++){
+        for(int j = 0; j < cols; j++){
+            result.at(i,j) = at(i,j) * m.at(i,j);
+        }
+    }
+    return result;
+}

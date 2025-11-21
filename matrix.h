@@ -21,6 +21,7 @@ public:
     Matrix subtract(const Matrix& m);
     Matrix multiply(const Matrix &m);
     Matrix map(double (*func)(double));
+    Matrix multiplyHadamard(const Matrix &m);
 };
 
 #endif // MATRIX_H
