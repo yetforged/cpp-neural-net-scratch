@@ -118,41 +118,96 @@ std::vector<double> NeuralNetwork::feedForward(std::vector<double> input_array){
 }
 
 void NeuralNetwork::train(std::vector<double> input_array, std::vector<double> target_array) {
-    // ---------------------------------------------------------
-    // PHASE 1: FEED FORWARD (Generate the Guess)
-    // ---------------------------------------------------------
     
-    // 1. Convert Inputs to Matrix
-    // (Copy code from feedForward or refactor later)
+    // PHASE 1: FEED FORWARD :  AI Takes a Guess
+    // Goal: Pass data from Input -> Hidden -> Output to get the current prediction.  
+    //   Convert Inputs to Matrix
+    if (input_array.size() != input_nodes || target_array.size() != output_nodes) {
+        std::cerr << "Input or Target size mismatch!" << std::endl;
+        return;
+    }
+    // Preparing the input matrix
+    // Convert Inputs to Matrix  
+    Matrix inputs(input_nodes, 1);
+    for (int i = 0; i < input_nodes; i++) {
+        inputs.at(i, 0) = input_array[i];
+    }
     
-    // 2. Calculate Hidden Layer Output
-    // (Matrix Multiply -> Add Bias -> Sigmoid)
+    //   Calculate Hidden Layer Output
+    // Inputs -> Hidden
+    // Math : hidden = sigmoid(weights_ih * inputs + bias_h)
+    Matrix hidden = weights_ih.multiply(inputs); // Weighted sum // dot product
+    hidden = hidden.add(bias_h); // Add bias
+    hidden = hidden.map(sigmoid); // Activation : Squishes to 0-1
+   
     
-    // 3. Calculate Final Output
-    // (Matrix Multiply -> Add Bias -> Sigmoid)
-
-    // ---------------------------------------------------------
-    // PHASE 2: BACKPROPAGATION (Calculate the Blame)
-    // ---------------------------------------------------------
-
-    // 4. Calculate Output Error
+    //   Calculate Final Output
+    // Hidden -> Output
+    // Math : outputs = sigmoid(weights_ho * hidden + bias_o)
+    Matrix outputs = weights_ho.multiply(hidden); // Weighted sum
+    outputs = outputs.add(bias_o); // Add bias
+    outputs = outputs.map(sigmoid); // Activation
+    
+    // PHASE 2: BACKPROPAGATION (Who responsible for the error?)
+    // Goal: Calculate errors and check how much each weight contributed to the error.
+    
+    // target vector to target Matrix
+    Matrix target(output_nodes, 1);
+    for(int i = 0; i < output_nodes; i++) {
+        target.at(i, 0) = target_array[i];
+    }
+    //   Calculate Output Error
     // ERROR = TARGETS - OUTPUTS
+    // Example: Wanted 1.0, got 0.2. Error = 0.8 (We need to go UP).
+    Matrix output_errors = target.subtract(outputs);
 
-    // 5. Calculate Hidden Error
+    //   Calculate Hidden Error
     // ERROR_HIDDEN = WEIGHTS_HO_TRANSPOSED * ERROR_OUTPUT
+    // We dont have a target for hidden layer
+    // We calculate its error by seeing how much it contributed to the output error
+    // We send the error back through the weights
+    // We need to transpose weights_ho to match dimensions
+    // Why transpose?
+    // Forward : Hidden(2 x 1) -> Weights_ho(1 x 2) -> Output(1 x 1)
+    // Backward : Output_Error(1 x 1) -> Hidden_Error(2 x 1) needs Weights(2 x 1)
+    Matrix weights_ho_T = weights_ho.transpose();
+    Matrix hidden_errors = weights_ho_T.multiply(output_errors);
 
-    // ---------------------------------------------------------
     // PHASE 3: GRADIENT DESCENT (Update the Weights)
-    // ---------------------------------------------------------
+    // Goal : Nudge the waits to reduce error next time.
+    // Formula : New Weight = Old Weight + (Learning Rate * Gradient * Input)
+   
     
-    // 6. Calculate Gradients (Nudges)
+    //  Calculate Gradients (Nudges)
     // Gradient = Error * dsigmoid(Output) * LearningRate
-    
-    // 7. Adjust Weights (Hidden -> Output)
+    // Logic:
+    // if output was close to 0 or 1, dsigmoid is small -> small change(dont change much)
+    // if output was around 0.5, dsigmoid is large -> large change (change more)
+     Matrix gradients = outputs.map(dsigmoid); // Derivative of outputs (calculating slope)
+    gradients = gradients.multiplyHadamard(output_errors); // Element-wise multiplication
+    gradients = gradients.multiplyScalar(learning_rate); 
+    // Scale by learning rate
+    // Big Error = Big Change. Small Error = Small Change.
+    // Note: We use Hadamard (Element-wise) because each neuron has its own error.
+    //   Adjust Weights (Hidden -> Output)
     // Delta = Gradient * Hidden_Transposed
     // Weights_HO = Weights_HO + Delta
-    
-    // 8. Adjust Weights (Input -> Hidden)
+    Matrix hidden_T = hidden.transpose();
+    Matrix weight_ho_deltas = gradients.multiply(hidden_T);
+    weights_ho = weights_ho.add(weight_ho_deltas);
+    bias_o = bias_o.add(gradients); // Adjust the output bias
+    //   Adjust Weights (Input -> Hidden)
     // Delta = Hidden_Gradient * Input_Transposed
     // Weights_IH = Weights_IH + Delta
+    // Calculate Hidden Gradient
+    Matrix hidden_gradients = hidden.map(dsigmoid);
+    hidden_gradients = hidden_gradients.multiplyHadamard(hidden_errors);
+    hidden_gradients = hidden_gradients.multiplyScalar(learning_rate);
+
+    // Calculate deltas for input to hidden weights
+    Matrix inputs_T = inputs.transpose();
+    Matrix weight_ih_deltas = hidden_gradients.multiply(inputs_T);
+    weights_ih = weights_ih.add(weight_ih_deltas); // Update input to hidden weights
+    bias_h = bias_h.add(hidden_gradients); // Adjust the hidden bias
+
 }
