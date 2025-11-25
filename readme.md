@@ -1,111 +1,50 @@
-# Neural Network from Scratch (C++)
+# Neural Network From Scratch (C++)
 
-A fully connected feedforward neural network (Multi-Layer Perceptron) built entirely from scratch in C++. No TensorFlow, no PyTorch, no external matrix libraries—just raw mathematics, memory management, made to get a deep understanding of how neural networks actually work under the hood.
+A fully connected feed-forward neural network (MLP) implemented entirely in C++. No TensorFlow, no PyTorch, no helper libraries. Just math, memory, and a stubborn need to see what happens under the hood.
 
-In high-level environments like Python, training a model on MNIST is often as trivial as import mnist. The library abstracts away file I/O, byte decoding, and array shaping.In standard C++, these luxuries dont exist. To build this engine, I had to solve two fundamental engineering problems manually:The Data Problem: The MNIST dataset uses a legacy .idx binary format. I designed a custom Binary Parser to read raw byte streams, handle dynamic memory allocation, and perform High-Endian to Little-Endian bitwise shifting to ensure data compatibility with modern CPU architectures.The Math Problem: Without numpy or BLAS, I implemented a linear algebra engine from scratch to handle $O(n^3)$ Matrix Multiplication, Transposition, and Hadamard Products.
+Two major problems had to be solved manually:
+
+**1. Data Handling**  
+MNIST comes in a legacy `.idx` binary format. This project includes a custom parser that reads raw byte streams, converts Big-Endian to Little-Endian, manages memory safely, and reshapes data for training.
+
+**2. Linear Algebra**  
+With no NumPy or BLAS, a lightweight matrix engine was built from scratch to support multiplication, transposition, Hadamard products, and activation mapping.
+
+---
 
 ## Features
 
-### Custom Matrix Engine (`matrix.cpp/h`)
-
-- Matrix multiplication (O(n³) implementation)
+### Matrix Engine (`matrix.cpp/h`)
+- Matrix multiplication (O(n³))
 - Transpose operations
 - Hadamard (element-wise) products
-- Scalar operations
-- Function mapping for activation functions
-- Memory-efficient 1D vector storage with 2D indexing
+- Scalar operations and activation mapping
+- Efficient 1D storage with 2D indexing
 
-### Binary Data Parser (`mnistParser.cpp/h`)
+### MNIST Binary Parser (`mnistParser.cpp/h`)
+- Reads IDX file format
+- Converts Big-Endian to Little-Endian
+- Normalizes pixel values (0–1)
+- One-hot encodes labels
 
-- Reads MNIST IDX binary file format
-- Handles Big-Endian to Little-Endian byte conversion
-- Normalizes pixel values (0-255 → 0.0-1.0)
-- Converts labels to one-hot encoded vectors
-
-### Deep Learning Core (`neuralNetwork.cpp/h`)
-
+### Neural Network Core (`neuralNetwork.cpp/h`)
 - Feedforward propagation
 - Backpropagation with gradient descent
-- Sigmoid activation function and its derivative
+- Sigmoid activation + derivative
 - Configurable learning rate
-- Weight initialization with random values to break symmetry
+- Random weight initialization
 
 ### Visualization
-
-- ASCII art renderer for digit visualization in terminal
-- Real-time training progress display
+- ASCII digit rendering in terminal
+- Real-time training progress
 - Prediction confidence output
 
-## Architecture
+---
 
-### MNIST Digit Recognition
 
-```
-Input Layer:    784 nodes (28×28 pixels)
-Hidden Layer:   128 nodes (Sigmoid activation)
-Output Layer:   10 nodes (Digits 0-9, Sigmoid activation)
-Learning Rate:  0.1
-```
+### License
+Open source. Intended for learning, experimentation, and understanding the fundamentals of neural networks.
 
-**Performance:** Achieves ~94.8% accuracy on the MNIST test set (10,000 unseen images) after just 1 epoch of training on 60,000 images.
+### Acknowledgments
+Built as a ground-up exploration of neural network mathematics, data handling, and implementation details in pure C++.
 
-### XOR Logic Gate
-
-```
-Input Layer:    2 nodes
-Hidden Layer:   4 nodes (Sigmoid activation)
-Output Layer:   1 node (Sigmoid activation)
-Learning Rate:  0.1
-Epochs:         50,000
-```
-
-**Performance:** Successfully learns the non-linear XOR function, demonstrating the network's ability to solve problems that single-layer perceptrons cannot.
-
-## Getting Started
-
-### Prerequisites
-
-- C++ compiler with C++11 support (g++, MinGW, or MSVC)
-- MNIST dataset files (see below)
-
-### MNIST Dataset Setup
-
-Dataset available at: http://yann.lecun.com/exdb/mnist/
-
-### Compilation
-
-**For MNIST Digit Recognition:**
-
-```bash
-g++ digitRecog.cpp mnistParser.cpp matrix.cpp neuralNetwork.cpp -o digitRecog
-```
-
-**For XOR Logic Gate:**
-
-```bash
-g++ xor.cpp matrix.cpp neuralNetwork.cpp -o xor
-```
-
-### Execution
-
-**Run Digit Recognition:**
-
-```bash
-./digitRecog      # Linux/Mac
-digitRecog.exe    # Windows
-```
-
-**Run XOR Demo:**
-
-```bash
-./xor             # Linux/Mac
-xor.exe           # Windows
-```
-
-## License
-
-This project is open source and available for educational purposes.
-
-## Acknowledgments
-
-Built as a deep dive into the mathematics and implementation details of neural networks.
